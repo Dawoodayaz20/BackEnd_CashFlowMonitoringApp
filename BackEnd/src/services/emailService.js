@@ -1,7 +1,14 @@
-const { Resend } = require('resend');
+const nodemailer = require('nodemailer');
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM = 'CashFlow Monitor <onboarding@resend.dev>';
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASS
+  }
+});
+
+const FROM = `CashFlow Monitor <${process.env.GMAIL_USER}>`;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -145,7 +152,7 @@ const monthlySummaryTemplate = ({ name, month, totalIncome, totalExpenses, netBa
 // ─── Send Functions ───────────────────────────────────────────────────────────
 
 const sendLowBalanceAlert = async ({ email, name, balance, threshold, currency }) => {
-  return resend.emails.send({
+  return transporter.sendMail({
     from: FROM,
     to: email,
     subject: `⚠️ Low Balance Alert — Your balance is ${formatAmount(balance, currency)}`,
@@ -154,7 +161,7 @@ const sendLowBalanceAlert = async ({ email, name, balance, threshold, currency }
 };
 
 const sendRecurringReminder = async ({ email, name, transactions, currency }) => {
-  return resend.emails.send({
+  return transporter.sendMail({
     from: FROM,
     to: email,
     subject: `🔁 Reminder: ${transactions.length} recurring transaction(s) due tomorrow`,
@@ -163,7 +170,7 @@ const sendRecurringReminder = async ({ email, name, transactions, currency }) =>
 };
 
 const sendMonthlySummary = async ({ email, name, month, totalIncome, totalExpenses, netBalance, byCategory, currency }) => {
-  return resend.emails.send({
+  return transporter.sendMail({
     from: FROM,
     to: email,
     subject: `📊 Your Monthly Summary for ${month} is ready`,

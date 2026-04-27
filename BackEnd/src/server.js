@@ -24,6 +24,7 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/transactions', require('./routes/transactionRoutes'));
 app.use('/api/settings', require('./routes/settingsRoutes'));
 app.use('/api/cron', require('./routes/cronRoutes'));
+app.use('/api/chat', require('./routes/chatRoutes'));
 
 app.get('/', (req, res) => res.json({ message: 'Backend is running' }));
 

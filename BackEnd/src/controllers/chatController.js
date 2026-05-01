@@ -77,4 +77,19 @@ const updateSessionTitle = async (req, res) => {
     }
 }
 
-module.exports = { chatHistory, getSession, createSession, saveMessage, updateSessionTitle };
+const deleteSession = async (req, res) => {
+    try {
+        const { session_id } = req.params;
+
+        await Chat.findOneAndUpdate(
+            { user_id: req.userId}, 
+            { $pull: { sessions: { session_id } }},
+        );
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to delete session', error: `${err}` });
+    }
+}
+
+module.exports = { chatHistory, getSession, createSession, saveMessage, updateSessionTitle, deleteSession };

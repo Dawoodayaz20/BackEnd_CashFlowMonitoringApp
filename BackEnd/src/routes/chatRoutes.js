@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const protect = require('../middleware/authMiddleware');
-const { chatHistory, getSession, createSession, saveMessage, updateSessionTitle } = require('../controllers/chatController')
+const { chatHistory, getSession, createSession, saveMessage, updateSessionTitle, deleteSession } = require('../controllers/chatController')
 
 // GET /api/chat/history
 router.get('/history', protect, chatHistory);
@@ -13,6 +13,8 @@ router.post('/session/new', protect, createSession);
 router.post('/message', protect, saveMessage);
 // PATCH /api/chat/session/:session_id/title
 router.patch('/session/:session_id/title', protect, updateSessionTitle);
+
+router.delete('/session/:session_id', protect, deleteSession);
 
 module.exports = router;
 
